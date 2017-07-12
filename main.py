@@ -36,7 +36,7 @@ def createImagesList():
                 fileObj.write(lineToWrite+'\n')
 
 
-    fileObj.close()
+    # fileObj.close()
 
 def createAnnotationFile():
     fileObj = open(annotationFilename, 'w')
@@ -66,4 +66,4 @@ print imgList[imgListIdx].split()
 
 
 
-annotationFileObj.close()
+# annotationFileObj.close()
