@@ -18,8 +18,11 @@ import cv2
 import os
 data_folder = './lfw/'
 imagesListFilename = data_folder + 'imagesList.txt'
+noFacesListFilename = data_folder + 'noFacesImagesList.txt'
 annotationFilename = data_folder + 'annotation.txt'
-face_cascade = cv2.CascadeClassifier('/usr/local/share/OpenCV/haarcascades/haarcascade_frontalface_default.xml')
+face_cascade = cv2.CascadeClassifier('/home/hiwiraum/opencv-3.1.0/data/haarcascades_cuda/haarcascade_frontalface_default.xml')
+face_cascade2 = cv2.CascadeClassifier('/home/hiwiraum/opencv-3.1.0/data/haarcascades/haarcascade_frontalface_default.xml')
+face_cascade3 = cv2.CascadeClassifier('/usr/local/share/OpenCV/haarcascades/haarcascade_frontalface_default.xml')
 
 # img = cv2.imread(data_folder+'Abdullah/Abdullah_0001.jpg')
 # cv2.imshow('img', img)
@@ -36,14 +39,16 @@ def checkIfFileExist(fileName):
 
 def createImagesList():
     fileObj = open(imagesListFilename, 'w')
+    noFacesFileObj = open(noFacesListFilename, 'w')
 
     dirs = [d for d in os.listdir(data_folder) if os.path.isdir(os.path.join(data_folder, d))]
 
     dirs.sort()
     for d, x in zip(dirs, range(len(dirs))):
-        if x > 10:
-            fileObj.close()
-            exit()
+        print 'reading ', d
+        # if x > 10:
+        #     fileObj.close()
+
         for _, _, files in os.walk(data_folder+d):
             files.sort()
             for f in files:
@@ -61,10 +66,25 @@ def createImagesList():
                         lineToWriteTmp += str(x) + ' ' + str(y) + ' ' + str(w) + ' ' + str(h)
                         fileObj.write(lineToWriteTmp + '\n')
                 else:
-                    fileObj.write(lineToWrite+'\n')
+                    faces2 = face_cascade2.detectMultiScale(img, 1.3, 5)
+                    faces3 = face_cascade3.detectMultiScale(img, 1.3, 5)
 
+                    if len(faces2) == 0 and len(faces3) == 0 :
+                        # fileObj.write(lineToWrite+'\n')
+                        noFacesFileObj.write(lineToWrite+'\n')
+                    else:
+                        if len(faces2)>1:
+                            faces = faces2
+                        else:
+                            faces = faces3
+                        lineToWrite += ' '
+                        for (x, y, w, h) in faces:
+                            lineToWriteTmp = (lineToWrite + '.')[:-1]
+                            lineToWriteTmp += str(x) + ' ' + str(y) + ' ' + str(w) + ' ' + str(h)
+                            fileObj.write(lineToWriteTmp + '\n')
 
-    # fileObj.close()
+    fileObj.close()
+    exit()
 
 def createAnnotationFile():
     fileObj = open(annotationFilename, 'w')
