@@ -1,6 +1,7 @@
 .idea
-lfw
+lfw/*
 lfw.tgz
+
 !lfw/annotation.txt
 !lfw/noFacesImagesList.txt
 !lfw/imagesList.txt
