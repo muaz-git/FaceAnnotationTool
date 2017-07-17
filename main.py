@@ -58,8 +58,8 @@ def createImagesList():
 
                 lineToWrite = d + ' ' + f # folderName <space> fileName
                 if totalFaces > 0:
-                    # if totalFaces > 1:
-                    #     print ''
+                    if totalFaces > 1:
+                        print ''
                     lineToWrite += ' '
                     for (x, y, w, h) in faces:
                         lineToWriteTmp = (lineToWrite + '.')[:-1]
